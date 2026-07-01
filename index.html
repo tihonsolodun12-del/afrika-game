@@ -817,14 +817,14 @@
             </div>
 
             <!-- ============================================= -->
-            <!-- ЛОКАЛЬНЫЙ ЧАТ (БЕЗ РЕГИСТРАЦИИ)              -->
+            <!-- ЛОКАЛЬНЫЙ ЧАТ (РАБОТАЕТ БЕЗ РЕГИСТРАЦИИ)     -->
             <!-- ============================================= -->
             <div class="chat-section">
                 <h3>💬 Общий чат</h3>
 
                 <div class="chat-messages" id="chatMessages">
                     <div class="msg">
-                        <div class="avatar" style="background: #4a6fa5;">👤</div>
+                        <div class="avatar" style="background: #4a6fa5;">Г</div>
                         <div class="msg-content">
                             <div class="user">Гриша</div>
                             <div class="text">Привет! Задавай вопросы по игре :)</div>
@@ -960,7 +960,7 @@
             }
 
             // =============================================
-            // ЛОКАЛЬНЫЙ ЧАТ (ХРАНИТСЯ В localStorage)
+            // ЛОКАЛЬНЫЙ ЧАТ
             // =============================================
             const chatMessages = document.getElementById('chatMessages');
             const chatInput = document.getElementById('chatInput');
@@ -1012,9 +1012,100 @@
 
                 const avatarColor = getAvatarColor(user);
                 const initial = getInitials(user);
+                const time = getCurrentTime();
 
                 msgDiv.innerHTML = `
                     <div class="avatar" style="background: ${avatarColor};">${initial}</div>
                     <div class="msg-content">
                         <div class="user">${user}</div>
-                        <div
+                        <div class="text">${text}</div>
+                    </div>
+                    <div class="time">${time}</div>
+                `;
+
+                chatMessages.appendChild(msgDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                saveMessages();
+            }
+
+            function handleSendMessage() {
+                const text = chatInput.value.trim();
+                if (text === '') return;
+
+                let userName = localStorage.getItem('chatUserName_afrika');
+                if (!userName) {
+                    userName = prompt('Введите ваше имя:', 'Гость');
+                    if (userName) {
+                        localStorage.setItem('chatUserName_afrika', userName);
+                    } else {
+                        userName = 'Гость';
+                    }
+                }
+
+                addMessage(userName, text);
+                chatInput.value = '';
+            }
+
+            // Отправка по кнопке
+            chatSendBtn.addEventListener('click', handleSendMessage);
+
+            // Отправка по Enter
+            chatInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    handleSendMessage();
+                }
+            });
+
+            // Очистка чата
+            chatClear.addEventListener('click', function() {
+                if (confirm('Очистить все сообщения?')) {
+                    chatMessages.innerHTML = '';
+                    localStorage.removeItem('chatMessages_afrika');
+                    // Добавляем приветственное сообщение
+                    addMessage('Гриша', 'Чат очищен. Задавай вопросы по игре :)');
+                }
+            });
+
+            // Загрузка сохранённых сообщений
+            loadMessages();
+
+            // =============================================
+            // МОДАЛЬНОЕ ОКНО
+            // =============================================
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImg');
+            const closeBtn = document.querySelector('.modal-close');
+
+            document.querySelectorAll('.gallery-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const img = this.querySelector('img');
+                    if (img) {
+                        modal.style.display = 'block';
+                        modalImg.src = img.src;
+                        modalImg.alt = img.alt;
+                    }
+                });
+            });
+
+            closeBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modal.style.display === 'block') {
+                    modal.style.display = 'none';
+                }
+            });
+
+            console.log('🔒 Сайт защищён паролем.');
+        })();
+    </script>
+
+</body>
+</html>

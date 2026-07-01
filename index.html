@@ -363,6 +363,9 @@
             font-family: 'Times New Roman', serif;
         }
 
+        /* ============================================= */
+        /* СТРАНИЦА 3: КОНТАКТЫ (ССЫЛКА НА ПОЧТУ)      */
+        /* ============================================= */
         .page-3 {
             margin-top: 25px;
             padding-top: 25px;
@@ -381,14 +384,21 @@
             border: 1px solid #4f5d47;
         }
 
-        .contact-grish {
+        .contact-link {
+            color: #ebdfb6;
+            text-decoration: none;
             font-size: 18px;
-            color: #e2dccd;
             font-family: 'Times New Roman', serif;
             cursor: pointer;
+            transition: 0.2s;
         }
 
-        .contact-grish strong {
+        .contact-link:hover {
+            color: #f5e3b3;
+            text-decoration: underline;
+        }
+
+        .contact-link strong {
             color: #ebdfb6;
             font-weight: 700;
         }
@@ -706,13 +716,11 @@
 
                 <h1>Приветствуем вас!</h1>
 
-                <!-- ФОТО ГРИШИ -->
                 <div class="grisha-photo">
                     <img src="https://i.ibb.co/MxSy9SSJ/image.jpg" alt="Гриша">
                     <div class="caption">👤 Гриша</div>
                 </div>
 
-                <!-- ИКОНКА (СЛЕВА) + ТЕКСТ (СПРАВА) -->
                 <div class="icon-text-block">
                     <div class="icon-left">
                         <img src="https://i.ibb.co/HTMC52vF/Whats-App-Image-2026-06-16-at-23-57-30.jpg" alt="Иконка игры">
@@ -741,7 +749,6 @@
                     <span class="guide-link" id="guideLink">открыть руководство →</span>
                 </div>
 
-                <!-- ГАЛЕРЕЯ: 6 СКРИНШОТОВ -->
                 <div class="gallery-title">📸 Скриншоты из игры</div>
 
                 <div class="gallery-grid">
@@ -773,9 +780,9 @@
             <div class="page-3">
 
                 <div class="contact-block">
-                    <div class="contact-grish">
+                    <a href="mailto:grisha.bananavich@gmail.com" class="contact-link">
                         <strong>👤 Гриша</strong> — по всем вопросам и идеям
-                    </div>
+                    </a>
                     <div class="complaint-note">
                         ⚡ жалобы не принимаются
                     </div>
@@ -784,7 +791,7 @@
             </div>
 
             <!-- ============================================= -->
-            <!-- ЧАТ (ПОЛЬЗОВАТЕЛИ МОГУТ ПИСАТЬ)              -->
+            <!-- ЧАТ                                           -->
             <!-- ============================================= -->
             <div class="chat-section">
                 <h3>💬 Чат</h3>
@@ -805,7 +812,7 @@
     </div>
 
     <!-- ============================================= -->
-    <!-- СТРАНИЦА РУКОВОДСТВА (открывается по ссылке)  -->
+    <!-- СТРАНИЦА РУКОВОДСТВА                         -->
     <!-- ============================================= -->
     <div id="guidePage" class="guide-page">
         <div class="game-card">
@@ -878,37 +885,24 @@
             });
 
             // =============================================
-            // КОНТАКТЫ
-            // =============================================
-            const grishBlock = document.querySelector('.contact-grish');
-            if (grishBlock) {
-                grishBlock.addEventListener('click', function() {
-                    alert('📩 Связаться с Гришей: grisha_samodelnaya-afrika@gmail.com');
-                });
-            }
-
-            // =============================================
             // ПЕРЕКЛЮЧЕНИЕ МЕЖДУ ГЛАВНОЙ И РУКОВОДСТВОМ
             // =============================================
             const guideLink = document.getElementById('guideLink');
             const guidePage = document.getElementById('guidePage');
             const backToSite = document.getElementById('backToSite');
 
-            // Открыть руководство
             guideLink.addEventListener('click', function() {
                 siteContent.classList.remove('active');
                 guidePage.classList.add('active');
                 history.pushState({ page: 'guide' }, '', '?guide');
             });
 
-            // Вернуться на главную
             backToSite.addEventListener('click', function() {
                 guidePage.classList.remove('active');
                 siteContent.classList.add('active');
                 history.pushState({ page: 'main' }, '', window.location.pathname);
             });
 
-            // Обработка кнопки "Назад" в браузере
             window.addEventListener('popstate', function(event) {
                 if (event.state && event.state.page === 'guide') {
                     siteContent.classList.remove('active');
@@ -919,20 +913,18 @@
                 }
             });
 
-            // Если в URL есть ?guide — сразу показываем руководство
             if (window.location.search.includes('guide')) {
                 siteContent.classList.remove('active');
                 guidePage.classList.add('active');
             }
 
             // =============================================
-            // ЧАТ (СОХРАНЕНИЕ В localStorage)
+            // ЧАТ
             // =============================================
             const chatMessages = document.getElementById('chatMessages');
             const chatInput = document.getElementById('chatInput');
             const chatSendBtn = document.getElementById('chatSendBtn');
 
-            // Загрузка сохранённых сообщений
             function loadMessages() {
                 const saved = localStorage.getItem('chatMessages_afrika');
                 if (saved) {
@@ -940,7 +932,6 @@
                 }
             }
 
-            // Сохранение сообщений
             function saveMessages() {
                 localStorage.setItem('chatMessages_afrika', chatMessages.innerHTML);
             }
@@ -971,7 +962,6 @@
                 addMessage(userName, text);
                 chatInput.value = '';
 
-                // Автоответ (можно убрать или заменить)
                 setTimeout(function() {
                     addMessage('Гриша', 'Спасибо за сообщение! Я отвечу позже.');
                 }, 800);
@@ -984,7 +974,6 @@
                 }
             });
 
-            // Загрузка сохранённых сообщений при старте
             loadMessages();
 
             // =============================================

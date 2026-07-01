@@ -447,21 +447,6 @@
             text-align: center;
         }
 
-        .chat-section {
-            margin-top: 30px;
-            padding: 20px 25px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 20px;
-            border: 1px solid #4d5a44;
-        }
-
-        .chat-section h3 {
-            font-size: 22px;
-            color: #f5edd7;
-            margin-bottom: 12px;
-            font-family: 'Times New Roman', serif;
-        }
-
         .footer {
             margin-top: 30px;
             text-align: center;
@@ -605,6 +590,132 @@
         .guide-page .back-link:hover {
             color: #fff3d1;
         }
+
+        /* ============================================= */
+        /* ЛОКАЛЬНЫЙ ЧАТ                                 */
+        /* ============================================= */
+        .chat-section {
+            margin-top: 30px;
+            padding: 20px 25px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            border: 1px solid #4d5a44;
+        }
+
+        .chat-section h3 {
+            font-size: 22px;
+            color: #f5edd7;
+            margin-bottom: 12px;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .chat-messages {
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            padding: 12px 16px;
+            height: 250px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+            border: 1px solid #3a4733;
+            font-size: 15px;
+            color: #d6cdb0;
+        }
+
+        .chat-messages .msg {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            padding: 6px 10px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.05);
+            border-bottom: 1px solid #2d382a;
+        }
+
+        .chat-messages .msg .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+            flex-shrink: 0;
+            color: #fff;
+        }
+
+        .chat-messages .msg .msg-content {
+            flex: 1;
+        }
+
+        .chat-messages .msg .user {
+            color: #f5e3b3;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .chat-messages .msg .text {
+            color: #e2dccd;
+            font-size: 15px;
+            word-wrap: break-word;
+        }
+
+        .chat-messages .msg .time {
+            color: #6a7860;
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        .chat-input-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input-row input {
+            flex: 1;
+            padding: 10px 16px;
+            border-radius: 30px;
+            border: 1px solid #4d5a44;
+            background: #1f261e;
+            color: #ede7d9;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .chat-input-row input:focus {
+            border-color: #b8a77d;
+        }
+
+        .chat-input-row button {
+            padding: 10px 24px;
+            border-radius: 30px;
+            border: none;
+            background: #d8cba4;
+            color: #1d261b;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .chat-input-row button:hover {
+            background: #e6dbb9;
+            transform: scale(1.02);
+        }
+
+        .chat-clear {
+            display: inline-block;
+            margin-top: 8px;
+            color: #8f9a84;
+            font-size: 12px;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .chat-clear:hover {
+            color: #e07c7c;
+        }
     </style>
 </head>
 <body>
@@ -706,29 +817,31 @@
             </div>
 
             <!-- ============================================= -->
-            <!-- ЧАТ (CACKLE)                                  -->
+            <!-- ЛОКАЛЬНЫЙ ЧАТ (БЕЗ РЕГИСТРАЦИИ)              -->
             <!-- ============================================= -->
             <div class="chat-section">
                 <h3>💬 Общий чат</h3>
 
-                <!-- CACKLE WIDGET -->
-                <div id="mc-container"></div>
-                <script type="text/javascript">
-                    cackle_widget = window.cackle_widget || [];
-                    cackle_widget.push({widget: 'Comment', id: 87132});
-                    (function() {
-                        var mc = document.createElement('script');
-                        mc.type = 'text/javascript';
-                        mc.async = true;
-                        mc.src = 'https://cackle.me/widget.js';
-                        var s = document.getElementsByTagName('script')[0];
-                        s.parentNode.insertBefore(mc, s.nextSibling);
-                    })();
-                </script>
-                <!-- КОНЕЦ CACKLE -->
+                <div class="chat-messages" id="chatMessages">
+                    <div class="msg">
+                        <div class="avatar" style="background: #4a6fa5;">👤</div>
+                        <div class="msg-content">
+                            <div class="user">Гриша</div>
+                            <div class="text">Привет! Задавай вопросы по игре :)</div>
+                        </div>
+                        <div class="time">сейчас</div>
+                    </div>
+                </div>
 
-                <p style="color: #8f9a84; font-size: 14px; margin-top: 10px; text-align: center;">
-                    👆 Войдите, чтобы оставить комментарий
+                <div class="chat-input-row">
+                    <input type="text" id="chatInput" placeholder="Напишите сообщение..." />
+                    <button id="chatSendBtn">Отправить</button>
+                </div>
+
+                <div class="chat-clear" id="chatClear">🗑️ Очистить чат</div>
+
+                <p style="color: #6a7860; font-size: 12px; margin-top: 8px; text-align: center;">
+                    ⚡ Сообщения сохраняются в вашем браузере. Другие пользователи видят свои сообщения.
                 </p>
             </div>
 
@@ -847,42 +960,61 @@
             }
 
             // =============================================
-            // МОДАЛЬНОЕ ОКНО
+            // ЛОКАЛЬНЫЙ ЧАТ (ХРАНИТСЯ В localStorage)
             // =============================================
-            const modal = document.getElementById('imageModal');
-            const modalImg = document.getElementById('modalImg');
-            const closeBtn = document.querySelector('.modal-close');
+            const chatMessages = document.getElementById('chatMessages');
+            const chatInput = document.getElementById('chatInput');
+            const chatSendBtn = document.getElementById('chatSendBtn');
+            const chatClear = document.getElementById('chatClear');
 
-            document.querySelectorAll('.gallery-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    const img = this.querySelector('img');
-                    if (img) {
-                        modal.style.display = 'block';
-                        modalImg.src = img.src;
-                        modalImg.alt = img.alt;
-                    }
-                });
-            });
+            // Цвета для аватарок
+            const avatarColors = [
+                '#4a6fa5', '#6b4a7a', '#3d8c6f', '#b8860b',
+                '#c0392b', '#2980b9', '#8e44ad', '#d35400',
+                '#27ae60', '#2c3e50', '#7f8c8d', '#e67e22'
+            ];
 
-            closeBtn.addEventListener('click', function() {
-                modal.style.display = 'none';
-            });
-
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    modal.style.display = 'none';
+            function getAvatarColor(name) {
+                let hash = 0;
+                for (let i = 0; i < name.length; i++) {
+                    hash = name.charCodeAt(i) + ((hash << 5) - hash);
                 }
-            });
+                return avatarColors[Math.abs(hash) % avatarColors.length];
+            }
 
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && modal.style.display === 'block') {
-                    modal.style.display = 'none';
+            function getInitials(name) {
+                return name.charAt(0).toUpperCase();
+            }
+
+            function getCurrentTime() {
+                const now = new Date();
+                return now.getHours().toString().padStart(2, '0') + ':' +
+                       now.getMinutes().toString().padStart(2, '0');
+            }
+
+            function loadMessages() {
+                const saved = localStorage.getItem('chatMessages_afrika');
+                if (saved) {
+                    chatMessages.innerHTML = saved;
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
                 }
-            });
+            }
 
-            console.log('🔒 Сайт защищён паролем.');
-        })();
-    </script>
+            function saveMessages() {
+                localStorage.setItem('chatMessages_afrika', chatMessages.innerHTML);
+            }
 
-</body>
-</html>
+            function addMessage(user, text) {
+                if (!user || !text) return;
+
+                const msgDiv = document.createElement('div');
+                msgDiv.className = 'msg';
+
+                const avatarColor = getAvatarColor(user);
+                const initial = getInitials(user);
+
+                msgDiv.innerHTML = `
+                    <div class="avatar" style="background: ${avatarColor};">${initial}</div>
+                    <div class="msg-content">
+                        <div class="user">${user}</div>
+                        <div

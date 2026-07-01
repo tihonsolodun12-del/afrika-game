@@ -404,7 +404,7 @@
         }
 
         /* ============================================= */
-        /* КРАТКОЕ РУКОВОДСТВО                           */
+        /* БЛОК КРАТКОГО РУКОВОДСТВА                    */
         /* ============================================= */
         .quick-guide {
             margin-top: 30px;
@@ -465,7 +465,7 @@
             background: rgba(0,0,0,0.2);
             border-radius: 12px;
             padding: 12px 16px;
-            height: 150px;
+            height: 200px;
             overflow-y: auto;
             margin-bottom: 12px;
             border: 1px solid #3a4733;
@@ -652,6 +652,34 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* ============================================= */
+        /* СТРАНИЦА РУКОВОДСТВА (отдельная ссылка)      */
+        /* ============================================= */
+        .guide-page {
+            display: none;
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .guide-page.active {
+            display: block;
+        }
+
+        .guide-page .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #f5e7c1;
+            font-size: 18px;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .guide-page .back-link:hover {
+            color: #fff3d1;
+        }
     </style>
 </head>
 <body>
@@ -710,7 +738,7 @@
 
                 <div class="guide-block">
                     <span class="guide-label">📖 Краткое руководство:</span>
-                    <span class="guide-link" id="guideLink">https://samodelnaya-afrika.ru/guide</span>
+                    <span class="guide-link" id="guideLink">открыть руководство →</span>
                 </div>
 
                 <!-- ГАЛЕРЕЯ: 6 СКРИНШОТОВ -->
@@ -756,29 +784,7 @@
             </div>
 
             <!-- ============================================= -->
-            <!-- КРАТКОЕ РУКОВОДСТВО                          -->
-            <!-- ============================================= -->
-            <div class="quick-guide">
-                <h3>📖 Краткое руководство по игре</h3>
-                <ol>
-                    <li><strong>Движение:</strong> Используй клавиши <strong>W, A, S, D</strong> для перемещения по миру.</li>
-                    <li><strong>Сбор ресурсов:</strong> Подойди к бананам или финикам и нажми <strong>ENTER</strong>, чтобы собрать.</li>
-                    <li><strong>Охота:</strong> Подойди к животному и нажми <strong>F</strong>, чтобы атаковать. Собирай мясо и яйца.</li>
-                    <li><strong>Взаимодействие:</strong> Нажми <strong>E</strong>, чтобы открыть сундуки, готовить еду или спать.</li>
-                    <li><strong>Готовка:</strong> В доме Гриши подойди к плите и нажми <strong>E</strong>. Создавай блюда из собранных ресурсов.</li>
-                    <li><strong>Ковбой:</strong> Найди дом Ковбоя. У него можно купить кирку, лодку, сыграть в кости (<strong>P</strong>) или взять задание (<strong>I</strong>).</li>
-                    <li><strong>Пещеры:</strong> С киркой иди в пещеры, добывай минералы для коллекции. Нажимай <strong>E</strong> рядом с жилой.</li>
-                    <li><strong>Лодка:</strong> Купи лодку у Ковбоя, затем арендуй её на причале (<strong>E</strong>). Управляй клавишами <strong>WASD</strong>, выходи нажатием <strong>Q</strong>.</li>
-                    <li><strong>Карта:</strong> Нажми <strong>M</strong>, чтобы открыть карту и ориентироваться в мире.</li>
-                    <li><strong>Сохранение:</strong> Игра сохраняется автоматически. Чтобы выйти, нажми <strong>ESC</strong>.</li>
-                </ol>
-                <div class="goal">
-                    ⚔️ <strong>Цель игры:</strong> Исследуй мир, собирай ресурсы, побеждай врагов, развивайся и найди ЗОЛОТОЙ БАНАН в пирамиде!
-                </div>
-            </div>
-
-            <!-- ============================================= -->
-            <!-- ЧАТ                                           -->
+            <!-- ЧАТ (ПОЛЬЗОВАТЕЛИ МОГУТ ПИСАТЬ)              -->
             <!-- ============================================= -->
             <div class="chat-section">
                 <h3>💬 Чат</h3>
@@ -795,6 +801,34 @@
 
         <div class="footer">
             <span>🌿 осваивай, исследуй, выживай 🌿</span>
+        </div>
+    </div>
+
+    <!-- ============================================= -->
+    <!-- СТРАНИЦА РУКОВОДСТВА (открывается по ссылке)  -->
+    <!-- ============================================= -->
+    <div id="guidePage" class="guide-page">
+        <div class="game-card">
+            <h1>📖 Краткое руководство</h1>
+
+            <div class="quick-guide" style="margin-top: 0;">
+                <ol>
+                    <li><strong>Движение:</strong> Используй клавиши <strong>W, A, S, D</strong> для перемещения по миру.</li>
+                    <li><strong>Сбор ресурсов:</strong> Подойди к бананам или финикам и нажми <strong>ENTER</strong>, чтобы собрать.</li>
+                    <li><strong>Охота:</strong> Подойди к животному и нажми <strong>F</strong>, чтобы атаковать. Собирай мясо и яйца.</li>
+                    <li><strong>Взаимодействие:</strong> Нажми <strong>E</strong>, чтобы открыть сундуки, готовить еду или спать.</li>
+                    <li><strong>Готовка:</strong> В доме Гриши подойди к плите и нажми <strong>E</strong>. Создавай блюда из собранных ресурсов.</li>
+                    <li><strong>Ковбой:</strong> Найди дом Ковбоя. У него можно купить кирку, лодку, сыграть в кости (<strong>P</strong>) или взять задание (<strong>I</strong>).</li>
+                    <li><strong>Пещеры:</strong> С киркой иди в пещеры, добывай минералы для коллекции. Нажимай <strong>E</strong> рядом с жилой.</li>
+                    <li><strong>Лодка:</strong> Купи лодку у Ковбоя, затем арендуй её на причале (<strong>E</strong>). Управляй клавишами <strong>WASD</strong>, выходи нажатием <strong>Q</strong>.</li>
+                    <li><strong>Сохранение:</strong> Игра сохраняется автоматически. Чтобы выйти, нажми <strong>ESC</strong>.</li>
+                </ol>
+                <div class="goal">
+                    ⚔️ <strong>Цель игры:</strong> Исследуй мир, собирай ресурсы, побеждай врагов, развивайся и найди ЗОЛОТОЙ БАНАН в пирамиде!
+                </div>
+            </div>
+
+            <div class="back-link" id="backToSite">← Вернуться на главную</div>
         </div>
     </div>
 
@@ -844,15 +878,6 @@
             });
 
             // =============================================
-            // РУКОВОДСТВО
-            // =============================================
-            const guideLink = document.getElementById('guideLink');
-
-            guideLink.addEventListener('click', function() {
-                alert('📖 Краткое руководство (демо-режим)');
-            });
-
-            // =============================================
             // КОНТАКТЫ
             // =============================================
             const grishBlock = document.querySelector('.contact-grish');
@@ -863,11 +888,62 @@
             }
 
             // =============================================
-            // ЧАТ
+            // ПЕРЕКЛЮЧЕНИЕ МЕЖДУ ГЛАВНОЙ И РУКОВОДСТВОМ
+            // =============================================
+            const guideLink = document.getElementById('guideLink');
+            const guidePage = document.getElementById('guidePage');
+            const backToSite = document.getElementById('backToSite');
+
+            // Открыть руководство
+            guideLink.addEventListener('click', function() {
+                siteContent.classList.remove('active');
+                guidePage.classList.add('active');
+                history.pushState({ page: 'guide' }, '', '?guide');
+            });
+
+            // Вернуться на главную
+            backToSite.addEventListener('click', function() {
+                guidePage.classList.remove('active');
+                siteContent.classList.add('active');
+                history.pushState({ page: 'main' }, '', window.location.pathname);
+            });
+
+            // Обработка кнопки "Назад" в браузере
+            window.addEventListener('popstate', function(event) {
+                if (event.state && event.state.page === 'guide') {
+                    siteContent.classList.remove('active');
+                    guidePage.classList.add('active');
+                } else {
+                    guidePage.classList.remove('active');
+                    siteContent.classList.add('active');
+                }
+            });
+
+            // Если в URL есть ?guide — сразу показываем руководство
+            if (window.location.search.includes('guide')) {
+                siteContent.classList.remove('active');
+                guidePage.classList.add('active');
+            }
+
+            // =============================================
+            // ЧАТ (СОХРАНЕНИЕ В localStorage)
             // =============================================
             const chatMessages = document.getElementById('chatMessages');
             const chatInput = document.getElementById('chatInput');
             const chatSendBtn = document.getElementById('chatSendBtn');
+
+            // Загрузка сохранённых сообщений
+            function loadMessages() {
+                const saved = localStorage.getItem('chatMessages_afrika');
+                if (saved) {
+                    chatMessages.innerHTML = saved;
+                }
+            }
+
+            // Сохранение сообщений
+            function saveMessages() {
+                localStorage.setItem('chatMessages_afrika', chatMessages.innerHTML);
+            }
 
             function addMessage(user, text) {
                 const msgDiv = document.createElement('div');
@@ -875,15 +951,27 @@
                 msgDiv.innerHTML = `<span class="user">${user}:</span> <span class="text">${text}</span>`;
                 chatMessages.appendChild(msgDiv);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
+                saveMessages();
             }
 
             function handleSendMessage() {
                 const text = chatInput.value.trim();
                 if (text === '') return;
 
-                addMessage('Вы', text);
+                let userName = localStorage.getItem('chatUserName');
+                if (!userName) {
+                    userName = prompt('Введите ваше имя:', 'Гость');
+                    if (userName) {
+                        localStorage.setItem('chatUserName', userName);
+                    } else {
+                        userName = 'Гость';
+                    }
+                }
+
+                addMessage(userName, text);
                 chatInput.value = '';
 
+                // Автоответ (можно убрать или заменить)
                 setTimeout(function() {
                     addMessage('Гриша', 'Спасибо за сообщение! Я отвечу позже.');
                 }, 800);
@@ -895,6 +983,9 @@
                     handleSendMessage();
                 }
             });
+
+            // Загрузка сохранённых сообщений при старте
+            loadMessages();
 
             // =============================================
             // МОДАЛЬНОЕ ОКНО

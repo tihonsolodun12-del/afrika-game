@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Самодельная Африка</title>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js">
+    </script>
+
+    <style>
+        /* ===== ОРИГИНАЛЬНЫЙ ДИЗАЙН ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Times New Roman', 'Arial', serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            background-image: url('https://i.ibb.co/RkXkDw7G/d183fc9e55e77a0fedb3993be14ead04.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-color: #1a1e1c;
+            color: #ede7d9;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 0;
+        }
+
+        .password-wrapper {
+            position: relative;
+            z-index: 2;
+            max-width: 420px;
+            width: 100%;
+            padding: 40px 30px;
+            background: rgba(30, 35, 30, 0.95);
+            border-radius: 20px;
+            border: 2px solid #5f6b53;
+            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.8);
+            text-align: center;
+        }
+
+        .password-wrapper h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #f5edd7;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .password-wrapper p {
+            color: #b8af92;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .password-wrapper input {
+            width: 100%;
+            padding: 12px 18px;
+            border-radius: 40px;
+            border: 2px solid #4d5a44;
+            background: #1f261e;
+            color: #ede7d9;
+            font-size: 16px;
+            outline: none;
+            margin-bottom: 15px;
+        }
+
+        .password-wrapper input:focus {
+            border-color: #b8a77d;
+        }
+
+        .password-wrapper button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 40px;
+            border: none;
+            background: #d8cba4;
+            color: #1d261b;
+            font-weight: 700;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .password-wrapper button:hover {
+            background: #e6dbb9;
+            transform: translateY(-2px);
+        }
+
+        .error-msg {
+            color: #e07c7c;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .password-wrapper.hidden {
+            display: none;
+        }
+
+        .site-content {
+            display: none;
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .site-content.active {
+            display: block;
+        }
+
+        .game-card {
+            background: rgba(30, 35, 30, 0.9);
+            backdrop-filter: blur(4px);
+            border-radius: 30px;
+            padding: 50px 50px 40px;
+            border: 1px solid #5f6b53;
+            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.8);
+        }
+
+        .page-1 {
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 42px;
+            font-weight: 700;
+            color: #f5edd7;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+            text-align: left;
+            margin-bottom: 20px;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .grisha-photo {
+            margin: 10px 0 25px 0;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 2px solid #4d5a44;
+            background: rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 400px;
+        }
+
+        .grisha-photo img {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-height: 300px;
+            object-fit: contain;
+        }
+
+        .grisha-photo .caption {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 16px;
+            font-size: 14px;
+            color: #cdc29e;
+            text-align: center;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .icon-text-block {
+            display: flex;
+            gap: 30px;
+            margin: 20px 0 25px 0;
+            align-items: flex-start;
+        }
+
+        .icon-left {
+            flex: 0 0 200px;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 2px solid #4d5a44;
+            background: rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .icon-left img {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-height: 200px;
+            object-fit: contain;
+        }
+
+        .text-right {
+            flex: 1;
+            font-size: 18px;
+            line-height: 1.8;
+            color: #e2dccd;
+            font-family: 'Times New Roman', serif;
+            text-align: justify;
+        }
+
+        .text-right strong {
+            color: #f5e3b3;
+            font-weight: 700;
+        }
+
+        .page-2 {
+            margin: 30px 0 20px 0;
+            padding-top: 30px;
+            border-top: 2px solid rgba(184, 167, 125, 0.2);
+        }
+
+        .center-text {
+            text-align: center;
+            font-size: 20px;
+            color: #e2dccd;
+            margin-bottom: 20px;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .center-text strong {
+            color: #f5e3b3;
+            font-weight: 700;
+        }
+
+        .download-block {
+            background: #262d24;
+            border-radius: 48px;
+            padding: 25px 30px;
+            margin: 20px 0 25px 0;
+            text-align: center;
+            border: 1px solid #748563;
+            box-shadow: 0 6px 0 #141a13;
+            transition: 0.1s;
+        }
+
+        .download-block:hover {
+            border-color: #a7b892;
+            background: #2d352b;
+        }
+
+        .download-link {
+            display: inline-block;
+            background: #d8cba4;
+            color: #1d261b;
+            font-weight: 700;
+            font-size: 22px;
+            padding: 12px 40px;
+            border-radius: 60px;
+            text-decoration: none;
+            box-shadow: 0 5px 0 #6a745a, 0 6px 16px rgba(0, 0, 0, 0.4);
+            transition: 0.08s ease-in;
+            border: 1px solid #e7ddb0;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .download-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 0 #5d6850, 0 12px 24px rgba(0, 0, 0, 0.5);
+            background: #e6dbb9;
+        }
+
+        .download-link:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #5d6850;
+        }
+
+        .version-text {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #a7b394;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .guide-block {
+            background: #20261e;
+            padding: 16px 24px;
+            border-radius: 40px;
+            border-left: 6px solid #b8a77d;
+            margin: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .guide-label {
+            font-weight: 600;
+            color: #cfc39e;
+            font-size: 18px;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .guide-link {
+            color: #f5e7c1;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+            font-weight: 500;
+            word-break: break-all;
+            cursor: pointer;
+            font-size: 16px;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .guide-link:hover {
+            color: #fff3d1;
+        }
+
+        .gallery-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #cfc39e;
+            margin: 25px 0 15px 0;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .gallery-item {
+            border-radius: 16px;
+            overflow: hidden;
+            border: 2px solid #4d5a44;
+            cursor: pointer;
+            background: transparent;
+            transition: 0.25s ease;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.03);
+            border-color: #a7b892;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+        }
+
+        .gallery-item img {
+            display: block;
+            width: 100%;
+            height: 170px;
+            object-fit: cover;
+            transition: 0.3s;
+        }
+
+        .gallery-item:hover img {
+            filter: brightness(1.1);
+        }
+
+        .gallery-hint {
+            font-size: 12px;
+            color: #6a7860;
+            text-align: center;
+            margin-top: 5px;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .page-3 {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 2px solid rgba(184, 167, 125, 0.2);
+        }
+
+        .contact-block {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 16px 24px;
+            border-radius: 60px;
+            border: 1px solid #4f5d47;
+        }
+
+        .contact-link {
+            color: #ebdfb6;
+            text-decoration: none;
+            font-size: 18px;
+            font-family: 'Times New Roman', serif;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .contact-link:hover {
+            color: #f5e3b3;
+            text-decoration: underline;
+        }
+
+        .contact-link strong {
+            color: #ebdfb6;
+            font-weight: 700;
+        }
+
+        .complaint-note {
+            color: #8f9a84;
+            font-size: 15px;
+            background: #1b211a;
+            padding: 5px 18px;
+            border-radius: 30px;
+            border: 1px solid #44503b;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .quick-guide {
+            margin-top: 30px;
+            padding: 20px 25px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            border: 1px solid #4d5a44;
+        }
+
+        .quick-guide h3 {
+            font-size: 22px;
+            color: #f5edd7;
+            margin-bottom: 12px;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .quick-guide ol {
+            padding-left: 20px;
+            color: #e2dccd;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .quick-guide ol li {
+            margin-bottom: 6px;
+        }
+
+        .quick-guide ol li strong {
+            color: #f5e3b3;
+        }
+
+        .quick-guide .goal {
+            margin-top: 15px;
+            color: #f5e3b3;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #6a7860;
+            border-top: 1px solid #354033;
+            padding-top: 20px;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .footer span {
+            background: #1f261e;
+            padding: 4px 18px;
+            border-radius: 40px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            padding-top: 60px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(6px);
+            cursor: pointer;
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 85vh;
+            border-radius: 20px;
+            border: 2px solid #8a9b7a;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: 700;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .modal-close:hover {
+            color: #bbb;
+        }
+
+        @media (max-width: 700px) {
+            .icon-text-block {
+                flex-direction: column;
+                align-items: center;
+            }
+            .icon-left {
+                flex: 0 0 auto;
+                width: 100%;
+                max-width: 300px;
+            }
+            .text-right {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .game-card {
+                padding: 25px 18px 20px;
+                border-radius: 20px;
+            }
+            h1 {
+                font-size: 32px;
+            }
+            .text-right {
+                font-size: 16px;
+            }
+            .center-text {
+                font-size: 17px;
+            }
+            .download-link {
+                font-size: 18px;
+                padding: 10px 25px;
+            }
+            .guide-block {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .contact-block {
+                flex-direction: column;
+                text-align: center;
+            }
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .gallery-item img {
+                height: 130px;
+            }
+            .password-wrapper {
+                padding: 25px 18px;
+            }
+            .grisha-photo {
+                max-width: 100%;
+            }
+            .grisha-photo img {
+                max-height: 200px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .guide-page {
+            display: none;
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .guide-page.active {
+            display: block;
+        }
+
+        .guide-page .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #f5e7c1;
+            font-size: 18px;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .guide-page .back-link:hover {
+            color: #fff3d1;
+        }
+
+        /* ===== ЧАТ ===== */
+        .chat-section {
+            margin-top: 30px;
+            padding: 20px 25px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            border: 1px solid #4d5a44;
+        }
+
+        .chat-section h3 {
+            font-size: 22px;
+            color: #f5edd7;
+            margin-bottom: 12px;
+            font-family: 'Times New Roman', serif;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-status {
+            font-size: 14px;
+            color: #7dcd85;
+            font-weight: normal;
+        }
+
+        .chat-status.offline {
+            color: #e07c7c;
+        }
+
+        .chat-messages {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 12px 16px;
+            height: 200px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+            border: 1px solid #3a4733;
+            font-size: 15px;
+            color: #d6cdb0;
+        }
+
+        .chat-messages .msg {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 8px;
+            padding: 6px 10px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid #2d382a;
+        }
+
+        .chat-messages .msg .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            flex-shrink: 0;
+            color: #fff;
+        }
+
+        .chat-messages .msg .msg-content {
+            flex: 1;
+        }
+
+        .chat-messages .msg .user {
+            color: #f5e3b3;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .chat-messages .msg .text {
+            color: #e2dccd;
+            font-size: 14px;
+            word-wrap: break-word;
+        }
+
+        .chat-messages .msg .time {
+            color: #6a7860;
+            font-size: 10px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .chat-messages .msg.system {
+            background: transparent;
+            justify-content: center;
+        }
+
+        .chat-messages .msg.system .text {
+            color: #6a7860;
+            font-style: italic;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .chat-messages .msg.system .avatar {
+            display: none;
+        }
+
+        .chat-input-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input-row input {
+            flex: 1;
+            padding: 10px 16px;
+            border-radius: 30px;
+            border: 1px solid #4d5a44;
+            background: #1f261e;
+            color: #ede7d9;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .chat-input-row input:focus {
+            border-color: #b8a77d;
+        }
+
+        .chat-input-row button {
+            padding: 10px 24px;
+            border-radius: 30px;
+            border: none;
+            background: #d8cba4;
+            color: #1d261b;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .chat-input-row button:hover {
+            background: #e6dbb9;
+            transform: scale(1.02);
+        }
+
+        .chat-clear {
+            display: inline-block;
+            margin-top: 8px;
+            color: #8f9a84;
+            font-size: 12px;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .chat-clear:hover {
+            color: #e07c7c;
+        }
+
+        .chat-online {
+            color: #6a7860;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .chat-online span {
+            color: #7dcd85;
+        }
+
+        .chat-empty {
+            color: #6a7860;
+            text-align: center;
+            padding: 30px 0;
+            font-style: italic;
+        }
+
+        .name-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 30px;
+        }
+
+        .name-bar .label {
+            color: #8f9a84;
+            font-size: 13px;
+        }
+
+        .name-bar .name {
+            color: #f5e3b3;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .name-bar .edit-btn {
+            color: #b8a77d;
+            font-size: 12px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 2px 10px;
+            border-radius: 12px;
+            transition: 0.2s;
+        }
+
+        .name-bar .edit-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #f5e3b3;
+        }
+
+        .name-edit {
+            display: none;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .name-edit.open {
+            display: flex;
+        }
+
+        .name-edit input {
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid #4d5a44;
+            background: #1f261e;
+            color: #ede7d9;
+            font-size: 13px;
+            outline: none;
+            width: 140px;
+        }
+
+        .name-edit input:focus {
+            border-color: #b8a77d;
+        }
+
+        .name-edit button {
+            padding: 4px 14px;
+            border-radius: 20px;
+            border: none;
+            background: #d8cba4;
+            color: #1d261b;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .name-edit .cancel {
+            background: #4d5a44;
+            color: #ede7d9;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== СТРАНИЦА ВВОДА ПАРОЛЯ ===== -->
+    <div id="passwordWrapper" class="password-wrapper">
+        <h2>🔒 Закрытый доступ</h2>
+        <p>Введите пароль, чтобы войти</p>
+        <input type="password" id="passwordInput" placeholder="Введите пароль..." autofocus>
+        <button id="enterBtn">Войти</button>
+        <div id="errorMsg" class="error-msg">❌ Неверный пароль. Попробуйте снова.</div>
+    </div>
+
+    <!-- ===== ОСНОВНОЙ САЙТ ===== -->
+    <div id="siteContent" class="site-content">
+        <div class="game-card">
+
+            <!-- ========== СТРАНИЦА 1 ========== -->
+            <div class="page-1">
+                <h1>Приветствуем вас!</h1>
+
+                <div class="grisha-photo">
+                    <img src="https://i.ibb.co/MxSy9SSJ/image.jpg" alt="Гриша">
+                    <div class="caption">👤 Гриша</div>
+                </div>
+
+                <div class="icon-text-block">
+                    <div class="icon-left">
+                        <img src="https://i.ibb.co/HTMC52vF/Whats-App-Image-2026-06-16-at-23-57-30.jpg" alt="Иконка игры">
+                    </div>
+                    <div class="text-right">
+                        <strong>Самодельная Африка</strong> – 2D симулятор выживания с сюжетом, созданный при поддержке Гриши. Вас ожидает открытый мир с различными биомами, местами и окружением. Вы можете осваивать поля и леса, исследовать горы, пересекать пустыни, бороздить море. Ваша жизнь зависит от вашего выбора. Не допустите плохого исхода!
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== СТРАНИЦА 2 ========== -->
+            <div class="page-2">
+                <div class="center-text">
+                    Скачать последнюю версию игры <strong>«Самодельная Африка»</strong> вы можете по ссылке.
+                </div>
+
+                <div class="download-block">
+                    <a href="https://github.com/tihonsolodun12-del/afrika-game/releases/download/v1.0/CA.zip" class="download-link" id="downloadBtn">Скачать игру</a>
+                    <div class="version-text">актуальная версия 0.6.8</div>
+                </div>
+
+                <div class="guide-block">
+                    <span class="guide-label">📖 Краткое руководство:</span>
+                    <span class="guide-link" id="guideLink">открыть руководство →</span>
+                </div>
+
+                <div class="gallery-title">📸 Скриншоты из игры</div>
+
+                <div class="gallery-grid">
+                    <figure class="gallery-item">
+                        <img src="https://i.ibb.co/hF85r4rf/screen1.jpg" alt="Скриншот 1">
+                    </figure>
+                    <figure class="gallery-item">
+                        <img src="https://i.ibb.co/DD5pYPY9/screen2.jpg" alt="Скриншот 2">
+                    </figure>
+                    <figure class="gallery-item">
+                        <img src="https://i.ibb.co/7NzxF5nx/screen3.jpg" alt="Скриншот 3">
+                    </figure>
+                    <figure class="gallery-item">
+                        <img src="https://i.ibb.co/nMZFHF8g/screen4.jpg" alt="Скриншот 4">
+                    </figure>
+                    <figure class="gallery-item">
+                        <img src="https://i.ibb.co/twN43xzx/screen5.jpg" alt="Скриншот 5">
+                    </figure>
+                    <figure class="gallery-item">
+                        <img src="https://i.ibb.co/JbBBpyk/screen6.jpg" alt="Скриншот 6">
+                    </figure>
+                </div>
+
+                <div class="gallery-hint">👆 нажмите на скриншот для увеличения</div>
+            </div>
+
+            <!-- ========== СТРАНИЦА 3 ========== -->
+            <div class="page-3">
+                <div class="contact-block">
+                    <a href="mailto:grisha.bananovich@gmail.com" class="contact-link">
+                        <strong>👤 Гриша</strong> — по всем вопросам и идеям
+                    </a>
+                    <div class="complaint-note">
+                        ⚡ жалобы не принимаются
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== ЧАТ ========== -->
+            <div class="chat-section">
+                <h3>
+                    💬 Общий чат
+                    <span class="chat-status" id="chatStatus">⏳ подключение...</span>
+                </h3>
+
+                <div class="chat-online">🟢 <span id="onlineCount">0</span> человек онлайн</div>
+
+                <!-- Имя пользователя -->
+                <div class="name-bar">
+                    <span class="label">👤 Вы:</span>
+                    <span class="name" id="displayName">Гость</span>
+                    <button class="edit-btn" id="changeNameBtn">✎ изменить</button>
+                    <div class="name-edit" id="nameEdit">
+                        <input type="text" id="nameInput" placeholder="Новое имя...">
+                        <button id="saveNameBtn">Сохранить</button>
+                        <button class="cancel" id="cancelNameBtn">Отмена</button>
+                    </div>
+                </div>
+
+                <div class="chat-messages" id="chatMessages">
+                    <div class="chat-empty">⏳ Загрузка сообщений...</div>
+                </div>
+
+                <div class="chat-input-row">
+                    <input type="text" id="chatInput" placeholder="Напишите сообщение..." disabled>
+                    <button id="chatSendBtn" disabled>Отправить</button>
+                </div>
+
+                <div style="display:flex; gap:12px; margin-top:6px; flex-wrap:wrap;">
+                    <span class="chat-clear" id="chatClear">🗑️ Очистить чат (админ)</span>
+                    <span style="color:#6a7860; font-size:12px; margin-left:auto;">⚡ Сообщения видны всем</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            <span>🌿 осваивай, исследуй, выживай 🌿</span>
+        </div>
+    </div>
+
+    <!-- ===== СТРАНИЦА РУКОВОДСТВА ===== -->
+    <div id="guidePage" class="guide-page">
+        <div class="game-card">
+            <h1>📖 Краткое руководство</h1>
+
+            <div class="quick-guide" style="margin-top: 0;">
+                <ol>
+                    <li><strong>Движение:</strong> Используй клавиши <strong>W, A, S, D</strong> для перемещения по миру.</li>
+                    <li><strong>Сбор ресурсов:</strong> Подойди к бананам или финикам и нажми <strong>ENTER</strong>, чтобы собрать.</li>
+                    <li><strong>Охота:</strong> Подойди к животному и нажми <strong>F</strong>, чтобы атаковать. Собирай мясо и яйца.</li>
+                    <li><strong>Взаимодействие:</strong> Нажми <strong>E</strong>, чтобы открыть сундуки, готовить еду или спать.</li>
+                    <li><strong>Готовка:</strong> В доме Гриши подойди к плите и нажми <strong>E</strong>. Создавай блюда из собранных ресурсов.</li>
+                    <li><strong>Ковбой:</strong> Найди дом Ковбоя. У него можно купить кирку, лодку, сыграть в кости (<strong>P</strong>) или взять задание (<strong>I</strong>).</li>
+                    <li><strong>Пещеры:</strong> С киркой иди в пещеры, добывай минералы для коллекции. Нажимай <strong>E</strong> рядом с жилой.</li>
+                    <li><strong>Лодка:</strong> Купи лодку у Ковбоя, затем арендуй её на причале (<strong>E</strong>). Управляй клавишами <strong>WASD</strong>, выходи нажатием <strong>Q</strong>.</li>
+                    <li><strong>Сохранение:</strong> Игра сохраняется автоматически. Чтобы выйти, нажми <strong>ESC</strong>.</li>
+                </ol>
+                <div class="goal">
+                    ⚔️ <strong>Цель игры:</strong> Исследуй мир, собирай ресурсы, побеждай врагов, развивайся и найди ЗОЛОТОЙ БАНАН в пирамиде!
+                </div>
+            </div>
+
+            <div class="back-link" id="backToSite">← Вернуться на главную</div>
+        </div>
+    </div>
+
+    <!-- ===== МОДАЛЬНОЕ ОКНО ===== -->
+    <div id="imageModal" class="modal">
+        <span class="modal-close">&times;</span>
+        <img class="modal-content" id="modalImg">
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- СКРИПТЫ -->
+    <!-- ============================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ============================================================
+            // 1. ПАРОЛЬ
+            // ============================================================
+            const PASSWORD = 'grisha';
+
+            const passwordWrapper = document.getElementById('passwordWrapper');
+            const siteContent = document.getElementById('siteContent');
+            const passwordInput = document.getElementById('passwordInput');
+            const enterBtn = document.getElementById('enterBtn');
+            const errorMsg = document.getElementById('errorMsg');
+
+            function checkPassword() {
+                if (passwordInput.value.trim() === PASSWORD) {
+                    passwordWrapper.classList.add('hidden');
+                    siteContent.classList.add('active');
+                    errorMsg.style.display = 'none';
+                    passwordInput.value = '';
+                    initChat();
+                } else {
+                    errorMsg.style.display = 'block';
+                    passwordInput.value = '';
+                    passwordInput.focus();
+                }
+            }
+
+            enterBtn.addEventListener('click', checkPassword);
+            passwordInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') checkPassword();
+            });
+
+            // ============================================================
+            // 2. НАВИГАЦИЯ (руководство)
+            // ============================================================
+            const guideLink = document.getElementById('guideLink');
+            const guidePage = document.getElementById('guidePage');
+            const backToSite = document.getElementById('backToSite');
+
+            guideLink.addEventListener('click', function() {
+                siteContent.classList.remove('active');
+                guidePage.classList.add('active');
+                history.pushState({ page: 'guide' }, '', '?guide');
+            });
+
+            backToSite.addEventListener('click', function() {
+                guidePage.classList.remove('active');
+                siteContent.classList.add('active');
+                history.pushState({ page: 'main' }, '', window.location.pathname);
+            });
+
+            window.addEventListener('popstate', function(event) {
+                if (event.state && event.state.page === 'guide') {
+                    siteContent.classList.remove('active');
+                    guidePage.classList.add('active');
+                } else {
+                    guidePage.classList.remove('active');
+                    siteContent.classList.add('active');
+                }
+            });
+
+            if (window.location.search.includes('guide')) {
+                siteContent.classList.remove('active');
+                guidePage.classList.add('active');
+            }
+
+            // ============================================================
+            // 3. МОДАЛКА ДЛЯ СКРИНШОТОВ
+            // ============================================================
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImg');
+            const closeBtn = document.querySelector('.modal-close');
+
+            document.querySelectorAll('.gallery-item').forEach(function(item) {
+                item.addEventListener('click', function() {
+                    const img = this.querySelector('img');
+                    if (img) {
+                        modal.style.display = 'block';
+                        modalImg.src = img.src;
+                    }
+                });
+            });
+
+            closeBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) modal.style.display = 'none';
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modal.style.display === 'block') {
+                    modal.style.display = 'none';
+                }
+            });
+
+            // ============================================================
+            // 4. FIREBASE ЧАТ
+            // ============================================================
+            const firebaseConfig = {
+                apiKey: "AIzaSyC2ZRgWpC4E3ZfTgX5Yq7VvR8wN9xMpLqA",
+                authDomain: "samodelnaya-afrika-chat.firebaseapp.com",
+                databaseURL: "https://samodelnaya-africa-default-rtdb.firebaseio.com/",
+                projectId: "samodelnaya-afrika-chat",
+                storageBucket: "samodelnaya-afrika-chat.appspot.com",
+                messagingSenderId: "123456789012",
+                appId: "1:123456789012:web:abcdef1234567890"
+            };
+
+            let database = null;
+            let chatInitialized = false;
+            let myName = localStorage.getItem('chatName') || 'Гость';
+            let myId = localStorage.getItem('chatId') || 'user_' + Math.random().toString(36).substr(2, 8);
+
+            const displayName = document.getElementById('displayName');
+            displayName.textContent = myName;
+
+            function initChat() {
+                if (chatInitialized) return;
+
+                try {
+                    if (!firebase.apps.length) {
+                        firebase.initializeApp(firebaseConfig);
+                    }
+                    database = firebase.database();
+                    chatInitialized = true;
+
+                    // Статус подключения
+                    const chatStatus = document.getElementById('chatStatus');
+                    const connectedRef = database.ref('.info/connected');
+                    connectedRef.on('value', function(snap) {
+                        if (snap.val() === true) {
+                            chatStatus.textContent = '🟢 онлайн';
+                            chatStatus.className = 'chat-status';
+                            document.getElementById('chatInput').disabled = false;
+                            document.getElementById('chatSendBtn').disabled = false;
+                        } else {
+                            chatStatus.textContent = '🔴 офлайн';
+                            chatStatus.className = 'chat-status offline';
+                            document.getElementById('chatInput').disabled = true;
+                            document.getElementById('chatSendBtn').disabled = true;
+                        }
+                    });
+
+                    console.log('✅ Firebase подключен!');
+                    loadMessages();
+                    setupSending();
+                    setupNameChange();
+                    setupOnline();
+                    setupClear();
+
+                } catch (e) {
+                    console.error('❌ Ошибка Firebase:', e);
+                    document.getElementById('chatStatus').textContent = '❌ ошибка';
+                    document.getElementById('chatStatus').className = 'chat-status offline';
+                }
+            }
+
+            // ============================================================
+            // 5. ЗАГРУЗКА СООБЩЕНИЙ
+            // ============================================================
+            function loadMessages() {
+                const chatMessages = document.getElementById('chatMessages');
+                const messagesRef = database.ref('chat/messages');
+
+                let first = true;
+
+                messagesRef.orderByChild('timestamp').limitToLast(100).on('child_added', function(snapshot) {
+                    const data = snapshot.val();
+                    if (!data) return;
+
+                    if (first) {
+                        chatMessages.innerHTML = '';
+                        first = false;
+                    }
+
+                    if (chatMessages.querySelector(`[data-key="${snapshot.key}"]`)) return;
+
+                    const colors = ['#4a6fa5', '#6b4a7a', '#3d8c6f', '#b8860b', '#c0392b',
+                        '#2980b9', '#8e44ad', '#d35400', '#27ae60', '#2c3e50', '#7f8c8d'
+                    ];
+                    let hash = 0;
+                    for (let i = 0; i < data.user.length; i++) {
+                        hash = data.user.charCodeAt(i) + ((hash << 5) - hash);
+                    }
+                    const color = colors[Math.abs(hash) % colors.length];
+                    const initial = data.user.charAt(0).toUpperCase();
+
+                    const isSystem = data.system === true;
+
+                    const msg = document.createElement('div');
+                    msg.className = 'msg';
+                    if (isSystem) msg.classList.add('system');
+
+                    msg.setAttribute('data-key', snapshot.key);
+
+                    if (isSystem) {
+                        msg.innerHTML = `
+                            <div class="msg-content">
+                                <div class="text">${data.text}</div>
+                            </div>
+                        `;
+                    } else {
+                        msg.innerHTML = `
+                            <div class="avatar" style="background:${color};">${initial}</div>
+                            <div class="msg-content">
+                                <div class="user">${data.user}</div>
+                                <div class="text">${data.text}</div>
+                            </div>
+                            <div class="time">${data.time || '--:--'}</div>
+                        `;
+                    }
+
+                    chatMessages.appendChild(msg);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                });
+
+                setTimeout(() => {
+                    if (first) {
+                        chatMessages.innerHTML = `
+                            <div class="chat-empty">💬 Напишите первое сообщение!</div>
+                        `;
+                    }
+                }, 1500);
+            }
+
+            // ============================================================
+            // 6. ОТПРАВКА СООБЩЕНИЙ
+            // ============================================================
+            function setupSending() {
+                const chatInput = document.getElementById('chatInput');
+                const chatSendBtn = document.getElementById('chatSendBtn');
+
+                function sendMessage() {
+                    const text = chatInput.value.trim();
+                    if (!text) return;
+
+                    const now = new Date();
+                    const time = now.getHours().toString().padStart(2, '0') + ':' +
+                        now.getMinutes().toString().padStart(2, '0');
+
+                    const messagesRef = database.ref('chat/messages');
+                    messagesRef.push({
+                        user: myName,
+                        text: text,
+                        time: time,
+                        timestamp: firebase.database.ServerValue.TIMESTAMP
+                    }).then(() => {
+                        chatInput.value = '';
+                        chatInput.focus();
+                    }).catch(err => {
+                        console.error('Ошибка отправки:', err);
+                        alert('Не удалось отправить сообщение.');
+                    });
+                }
+
+                chatSendBtn.addEventListener('click', sendMessage);
+                chatInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        sendMessage();
+                    }
+                });
+            }
+
+            // ============================================================
+            // 7. СМЕНА ИМЕНИ
+            // ============================================================
+            function setupNameChange() {
+                const changeBtn = document.getElementById('changeNameBtn');
+                const nameEdit = document.getElementById('nameEdit');
+                const nameInput = document.getElementById('nameInput');
+                const saveBtn = document.getElementById('saveNameBtn');
+                const cancelBtn = document.getElementById('cancelNameBtn');
+
+                changeBtn.addEventListener('click', function() {
+                    nameEdit.classList.add('open');
+                    nameInput.value = myName;
+                    nameInput.focus();
+                    changeBtn.style.display = 'none';
+                });
+
+                saveBtn.addEventListener('click', function() {
+                    const newName = nameInput.value.trim();
+                    if (newName) {
+                        myName = newName;
+                        localStorage.setItem('chatName', myName);
+                        displayName.textContent = myName;
+                        nameEdit.classList.remove('open');
+                        changeBtn.style.display = 'inline';
+                    }
+                });
+
+                cancelBtn.addEventListener('click', function() {
+                    nameEdit.classList.remove('open');
+                    changeBtn.style.display = 'inline';
+                });
+
+                nameInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') saveBtn.click();
+                    if (e.key === 'Escape') cancelBtn.click();
+                });
+            }
+
+            // ============================================================
+            // 8. ОНЛАЙН
+            // ============================================================
+            function setupOnline() {
+                const userRef = database.ref('chat/users');
+                const onlineSpan = document.getElementById('onlineCount');
+
+                localStorage.setItem('chatId', myId);
+
+                const myStatus = userRef.child(myId);
+                myStatus.set({
+                    online: true,
+                    lastSeen: firebase.database.ServerValue.TIMESTAMP
+                });
+
+                setInterval(() => {
+                    myStatus.update({ lastSeen: firebase.database.ServerValue.TIMESTAMP });
+                }, 10000);
+
+                window.addEventListener('beforeunload', function() {
+                    myStatus.update({ online: false });
+                });
+
+                userRef.on('value', function(snap) {
+                    let count = 0;
+                    const now = Date.now();
+                    snap.forEach(function(child) {
+                        const data = child.val();
+                        if (data && data.online && (now - data.lastSeen < 30000)) {
+                            count++;
+                        }
+                    });
+                    onlineSpan.textContent = count;
+                });
+            }
+
+            // ============================================================
+            // 9. ОЧИСТКА ЧАТА (админ)
+            // ============================================================
+            function setupClear() {
+                document.getElementById('chatClear').addEventListener('click', function() {
+                    const pwd = prompt('Введите административный пароль для очистки чата:');
+                    if (pwd === 'admin123') {
+                        if (confirm('Очистить все сообщения в чате?')) {
+                            database.ref('chat/messages').remove().then(() => {
+                                document.getElementById('chatMessages').innerHTML = `
+                                    <div class="chat-empty">💬 Чат очищен администратором</div>
+                                `;
+                                const now = new Date();
+                                const time = now.getHours().toString().padStart(2, '0') + ':' +
+                                    now.getMinutes().toString().padStart(2, '0');
+                                database.ref('chat/messages').push({
+                                    user: 'Гриша',
+                                    text: '🗑️ Чат был очищен администратором',
+                                    time: time,
+                                    system: true,
+                                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                                });
+                            }).catch(err => alert('Ошибка очистки: ' + err.message));
+                        }
+                    } else if (pwd !== null) {
+                        alert('Неверный пароль администратора.');
+                    }
+                });
+            }
+
+            // Если пользователь уже залогинен
+            if (passwordWrapper.classList.contains('hidden') && siteContent.classList.contains('active')) {
+                initChat();
+            }
+
+        })();
+    </script>
+
+</body>
+</html>

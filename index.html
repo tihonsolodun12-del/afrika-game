@@ -12,7 +12,7 @@
     </script>
 
     <style>
-        /* ===== СТИЛИ ===== */
+        /* ===== ВСЕ СТИЛИ (полная версия) ===== */
         * {
             margin: 0;
             padding: 0;
@@ -791,12 +791,11 @@
             document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.style.display === 'block') modal
                     .style.display = 'none'; });
 
-            // ========== 4. FIREBASE ЧАТ ==========
-            // ЗАМЕНИТЕ ЭТУ КОНФИГУРАЦИЮ НА ВАШУ!
+            // ========== 4. FIREBASE ЧАТ (ВАША БАЗА ДАННЫХ) ==========
             const firebaseConfig = {
                 apiKey: "AIzaSyC2ZRgWpC4E3ZfTgX5Yq7VvR8wN9xMpLqA",
                 authDomain: "samodelnaya-afrika-chat.firebaseapp.com",
-                databaseURL: "https://samodelnaya-afrika-chat-default-rtdb.firebaseio.com",
+                databaseURL: "https://samodelnaya-africa-default-rtdb.firebaseio.com/",
                 projectId: "samodelnaya-afrika-chat",
                 storageBucket: "samodelnaya-afrika-chat.appspot.com",
                 messagingSenderId: "123456789012",
@@ -810,15 +809,15 @@
                 if (chatInitialized) return;
 
                 try {
-                    // Проверяем, не инициализирован ли уже Firebase
                     if (!firebase.apps.length) {
                         firebase.initializeApp(firebaseConfig);
                     }
                     database = firebase.database();
                     chatInitialized = true;
+                    console.log('✅ Firebase подключён! URL:', firebaseConfig.databaseURL);
                 } catch (e) {
-                    console.error('Ошибка инициализации Firebase:', e);
-                    alert('Не удалось подключиться к чату. Проверьте конфигурацию Firebase.');
+                    console.error('❌ Ошибка Firebase:', e);
+                    alert('Не удалось подключиться к чату. Проверьте интернет.');
                     return;
                 }
 
@@ -850,15 +849,12 @@
                 // ===== ЗАГРУЗКА СООБЩЕНИЙ =====
                 const messagesRef = database.ref('chat/messages');
 
-                // Очищаем контейнер
                 chatMessages.innerHTML = '';
 
-                // Слушаем новые сообщения
                 messagesRef.orderByChild('timestamp').limitToLast(100).on('child_added', function(snapshot) {
                     const data = snapshot.val();
                     if (!data) return;
 
-                    // Проверяем дубликаты
                     const existing = chatMessages.querySelector(`[data-key="${snapshot.key}"]`);
                     if (existing) return;
 
@@ -882,7 +878,7 @@
                     chatMessages.scrollTop = chatMessages.scrollHeight;
                 });
 
-                // ===== ОТПРАВКА СООБЩЕНИЙ =====
+                // ===== ОТПРАВКА =====
                 function sendMessage() {
                     const text = chatInput.value.trim();
                     if (!text) return;
@@ -905,33 +901,32 @@
                         .then(() => { chatInput.value = ''; })
                         .catch(err => {
                             console.error('Ошибка отправки:', err);
-                            alert('Не удалось отправить сообщение. Проверьте подключение к интернету.');
+                            alert('Не удалось отправить сообщение.');
                         });
                 }
 
                 chatSendBtn.addEventListener('click', sendMessage);
                 chatInput.addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
 
-                // ===== ОЧИСТКА ЧАТА (админ) =====
+                // ===== ОЧИСТКА (админ) =====
                 chatClear.addEventListener('click', function() {
-                    const pwd = prompt('Введите административный пароль для очистки чата:');
+                    const pwd = prompt('Введите административный пароль:');
                     if (pwd === 'admin123') {
-                        if (confirm('Очистить все сообщения в чате?')) {
+                        if (confirm('Очистить все сообщения?')) {
                             messagesRef.remove()
                                 .then(() => {
                                     chatMessages.innerHTML = '';
-                                    // Добавляем служебное сообщение
                                     messagesRef.push({
                                         user: 'Гриша',
-                                        text: 'Чат был очищен администратором.',
+                                        text: 'Чат очищен администратором.',
                                         time: getCurrentTime(),
                                         timestamp: firebase.database.ServerValue.TIMESTAMP
                                     });
                                 })
-                                .catch(err => alert('Ошибка очистки: ' + err.message));
+                                .catch(err => alert('Ошибка: ' + err.message));
                         }
                     } else if (pwd !== null) {
-                        alert('Неверный пароль администратора.');
+                        alert('Неверный пароль.');
                     }
                 });
 
@@ -969,11 +964,9 @@
                     });
                 }
                 updateOnlineStatus();
-
-                console.log('✅ Чат успешно подключён к Firebase!');
             }
 
-            // Если пользователь уже залогинен (например, обновил страницу)
+            // Если пользователь уже залогинен
             if (passwordWrapper.classList.contains('hidden') && siteContent.classList.contains('active')) {
                 initChat();
             }

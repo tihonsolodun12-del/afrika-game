@@ -5,20 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Самодельная Африка — общественный чат</title>
 
-    <!-- Firebase SDKs -->
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js">
     </script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js">
     </script>
 
     <style>
-        /* ===== Стили (полностью сохранены из оригинала) ===== */
+        /* ===== СТИЛИ ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: 'Times New Roman', 'Arial', serif;
             min-height: 100vh;
@@ -34,7 +33,6 @@
             background-color: #1a1e1c;
             color: #ede7d9;
         }
-
         body::before {
             content: '';
             position: fixed;
@@ -46,7 +44,6 @@
             backdrop-filter: blur(4px);
             z-index: 0;
         }
-
         .password-wrapper {
             position: relative;
             z-index: 2;
@@ -59,20 +56,16 @@
             box-shadow: 0 25px 40px rgba(0, 0, 0, 0.8);
             text-align: center;
         }
-
         .password-wrapper h2 {
             font-size: 28px;
             margin-bottom: 10px;
             color: #f5edd7;
-            font-family: 'Times New Roman', serif;
         }
-
         .password-wrapper p {
             color: #b8af92;
             margin-bottom: 20px;
             font-size: 16px;
         }
-
         .password-wrapper input {
             width: 100%;
             padding: 12px 18px;
@@ -84,11 +77,9 @@
             outline: none;
             margin-bottom: 15px;
         }
-
         .password-wrapper input:focus {
             border-color: #b8a77d;
         }
-
         .password-wrapper button {
             width: 100%;
             padding: 12px;
@@ -101,23 +92,19 @@
             cursor: pointer;
             transition: 0.2s;
         }
-
         .password-wrapper button:hover {
             background: #e6dbb9;
             transform: translateY(-2px);
         }
-
         .error-msg {
             color: #e07c7c;
             font-size: 14px;
             margin-top: 10px;
             display: none;
         }
-
         .password-wrapper.hidden {
             display: none;
         }
-
         .site-content {
             display: none;
             position: relative;
@@ -125,11 +112,9 @@
             width: 100%;
             max-width: 900px;
         }
-
         .site-content.active {
             display: block;
         }
-
         .game-card {
             background: rgba(30, 35, 30, 0.9);
             backdrop-filter: blur(4px);
@@ -138,31 +123,21 @@
             border: 1px solid #5f6b53;
             box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.8);
         }
-
-        .page-1 {
-            margin-bottom: 10px;
-        }
-
         h1 {
             font-size: 42px;
             font-weight: 700;
             color: #f5edd7;
             text-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
-            text-align: left;
             margin-bottom: 20px;
-            font-family: 'Times New Roman', serif;
         }
-
         .grisha-photo {
             margin: 10px 0 25px 0;
             border-radius: 20px;
             overflow: hidden;
             border: 2px solid #4d5a44;
             background: rgba(0, 0, 0, 0.3);
-            text-align: center;
             max-width: 400px;
         }
-
         .grisha-photo img {
             display: block;
             width: 100%;
@@ -170,32 +145,26 @@
             max-height: 300px;
             object-fit: contain;
         }
-
         .grisha-photo .caption {
             background: rgba(0, 0, 0, 0.6);
             padding: 8px 16px;
             font-size: 14px;
             color: #cdc29e;
             text-align: center;
-            font-family: 'Times New Roman', serif;
         }
-
         .icon-text-block {
             display: flex;
             gap: 30px;
             margin: 20px 0 25px 0;
             align-items: flex-start;
         }
-
         .icon-left {
             flex: 0 0 200px;
             border-radius: 20px;
             overflow: hidden;
             border: 2px solid #4d5a44;
             background: rgba(0, 0, 0, 0.3);
-            text-align: center;
         }
-
         .icon-left img {
             display: block;
             width: 100%;
@@ -203,40 +172,30 @@
             max-height: 200px;
             object-fit: contain;
         }
-
         .text-right {
             flex: 1;
             font-size: 18px;
             line-height: 1.8;
             color: #e2dccd;
-            font-family: 'Times New Roman', serif;
             text-align: justify;
         }
-
         .text-right strong {
             color: #f5e3b3;
-            font-weight: 700;
         }
-
         .page-2 {
             margin: 30px 0 20px 0;
             padding-top: 30px;
             border-top: 2px solid rgba(184, 167, 125, 0.2);
         }
-
         .center-text {
             text-align: center;
             font-size: 20px;
             color: #e2dccd;
             margin-bottom: 20px;
-            font-family: 'Times New Roman', serif;
         }
-
         .center-text strong {
             color: #f5e3b3;
-            font-weight: 700;
         }
-
         .download-block {
             background: #262d24;
             border-radius: 48px;
@@ -245,14 +204,11 @@
             text-align: center;
             border: 1px solid #748563;
             box-shadow: 0 6px 0 #141a13;
-            transition: 0.1s;
         }
-
         .download-block:hover {
             border-color: #a7b892;
             background: #2d352b;
         }
-
         .download-link {
             display: inline-block;
             background: #d8cba4;
@@ -265,27 +221,21 @@
             box-shadow: 0 5px 0 #6a745a, 0 6px 16px rgba(0, 0, 0, 0.4);
             transition: 0.08s ease-in;
             border: 1px solid #e7ddb0;
-            font-family: 'Times New Roman', serif;
         }
-
         .download-link:hover {
             transform: translateY(-2px);
             box-shadow: 0 7px 0 #5d6850, 0 12px 24px rgba(0, 0, 0, 0.5);
             background: #e6dbb9;
         }
-
         .download-link:active {
             transform: translateY(4px);
             box-shadow: 0 1px 0 #5d6850;
         }
-
         .version-text {
             margin-top: 8px;
             font-size: 14px;
             color: #a7b394;
-            font-family: 'Times New Roman', serif;
         }
-
         .guide-block {
             background: #20261e;
             padding: 16px 24px;
@@ -298,85 +248,61 @@
             justify-content: space-between;
             gap: 15px;
         }
-
         .guide-label {
             font-weight: 600;
             color: #cfc39e;
             font-size: 18px;
-            font-family: 'Times New Roman', serif;
         }
-
         .guide-link {
             color: #f5e7c1;
             text-decoration: underline;
-            text-underline-offset: 4px;
-            font-weight: 500;
-            word-break: break-all;
             cursor: pointer;
             font-size: 16px;
-            font-family: 'Times New Roman', serif;
         }
-
         .guide-link:hover {
             color: #fff3d1;
         }
-
         .gallery-title {
             font-size: 20px;
             font-weight: 600;
             color: #cfc39e;
             margin: 25px 0 15px 0;
-            font-family: 'Times New Roman', serif;
         }
-
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 12px;
             margin-bottom: 10px;
         }
-
         .gallery-item {
             border-radius: 16px;
             overflow: hidden;
             border: 2px solid #4d5a44;
             cursor: pointer;
-            background: transparent;
             transition: 0.25s ease;
         }
-
         .gallery-item:hover {
             transform: scale(1.03);
             border-color: #a7b892;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
         }
-
         .gallery-item img {
             display: block;
             width: 100%;
             height: 170px;
             object-fit: cover;
-            transition: 0.3s;
         }
-
-        .gallery-item:hover img {
-            filter: brightness(1.1);
-        }
-
         .gallery-hint {
             font-size: 12px;
             color: #6a7860;
             text-align: center;
             margin-top: 5px;
-            font-family: 'Times New Roman', serif;
         }
-
         .page-3 {
             margin-top: 25px;
             padding-top: 25px;
             border-top: 2px solid rgba(184, 167, 125, 0.2);
         }
-
         .contact-block {
             display: flex;
             justify-content: space-between;
@@ -388,26 +314,19 @@
             border-radius: 60px;
             border: 1px solid #4f5d47;
         }
-
         .contact-link {
             color: #ebdfb6;
             text-decoration: none;
             font-size: 18px;
-            font-family: 'Times New Roman', serif;
             cursor: pointer;
-            transition: 0.2s;
         }
-
         .contact-link:hover {
             color: #f5e3b3;
             text-decoration: underline;
         }
-
         .contact-link strong {
             color: #ebdfb6;
-            font-weight: 700;
         }
-
         .complaint-note {
             color: #8f9a84;
             font-size: 15px;
@@ -415,9 +334,7 @@
             padding: 5px 18px;
             border-radius: 30px;
             border: 1px solid #44503b;
-            font-family: 'Times New Roman', serif;
         }
-
         .quick-guide {
             margin-top: 30px;
             padding: 20px 25px;
@@ -425,36 +342,29 @@
             border-radius: 20px;
             border: 1px solid #4d5a44;
         }
-
         .quick-guide h3 {
             font-size: 22px;
             color: #f5edd7;
             margin-bottom: 12px;
-            font-family: 'Times New Roman', serif;
         }
-
         .quick-guide ol {
             padding-left: 20px;
             color: #e2dccd;
             font-size: 16px;
             line-height: 1.8;
         }
-
         .quick-guide ol li {
             margin-bottom: 6px;
         }
-
         .quick-guide ol li strong {
             color: #f5e3b3;
         }
-
         .quick-guide .goal {
             margin-top: 15px;
             color: #f5e3b3;
             font-size: 16px;
             text-align: center;
         }
-
         .footer {
             margin-top: 30px;
             text-align: center;
@@ -462,15 +372,12 @@
             color: #6a7860;
             border-top: 1px solid #354033;
             padding-top: 20px;
-            font-family: 'Times New Roman', serif;
         }
-
         .footer span {
             background: #1f261e;
             padding: 4px 18px;
             border-radius: 40px;
         }
-
         .modal {
             display: none;
             position: fixed;
@@ -484,7 +391,6 @@
             backdrop-filter: blur(6px);
             cursor: pointer;
         }
-
         .modal-content {
             margin: auto;
             display: block;
@@ -494,7 +400,6 @@
             border: 2px solid #8a9b7a;
             box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
         }
-
         .modal-close {
             position: absolute;
             top: 20px;
@@ -502,14 +407,11 @@
             color: #f1f1f1;
             font-size: 40px;
             font-weight: 700;
-            transition: 0.3s;
             cursor: pointer;
         }
-
         .modal-close:hover {
             color: #bbb;
         }
-
         @media (max-width: 700px) {
             .icon-text-block {
                 flex-direction: column;
@@ -524,7 +426,6 @@
                 font-size: 16px;
             }
         }
-
         @media (max-width: 600px) {
             .game-card {
                 padding: 25px 18px 20px;
@@ -532,24 +433,6 @@
             }
             h1 {
                 font-size: 32px;
-            }
-            .text-right {
-                font-size: 16px;
-            }
-            .center-text {
-                font-size: 17px;
-            }
-            .download-link {
-                font-size: 18px;
-                padding: 10px 25px;
-            }
-            .guide-block {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .contact-block {
-                flex-direction: column;
-                text-align: center;
             }
             .gallery-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -567,13 +450,11 @@
                 max-height: 200px;
             }
         }
-
         @media (max-width: 400px) {
             .gallery-grid {
                 grid-template-columns: 1fr;
             }
         }
-
         .guide-page {
             display: none;
             position: relative;
@@ -581,11 +462,9 @@
             max-width: 900px;
             width: 100%;
         }
-
         .guide-page.active {
             display: block;
         }
-
         .guide-page .back-link {
             display: inline-block;
             margin-top: 20px;
@@ -594,12 +473,11 @@
             text-decoration: underline;
             cursor: pointer;
         }
-
         .guide-page .back-link:hover {
             color: #fff3d1;
         }
 
-        /* ===== Чат (обновлён для облака) ===== */
+        /* ===== ЧАТ ===== */
         .chat-section {
             margin-top: 30px;
             padding: 20px 25px;
@@ -607,14 +485,11 @@
             border-radius: 20px;
             border: 1px solid #4d5a44;
         }
-
         .chat-section h3 {
             font-size: 22px;
             color: #f5edd7;
             margin-bottom: 12px;
-            font-family: 'Times New Roman', serif;
         }
-
         .chat-messages {
             background: rgba(0, 0, 0, 0.2);
             border-radius: 12px;
@@ -626,7 +501,6 @@
             font-size: 15px;
             color: #d6cdb0;
         }
-
         .chat-messages .msg {
             display: flex;
             align-items: center;
@@ -637,7 +511,6 @@
             background: rgba(255, 255, 255, 0.05);
             border-bottom: 1px solid #2d382a;
         }
-
         .chat-messages .msg .avatar {
             width: 40px;
             height: 40px;
@@ -650,34 +523,28 @@
             flex-shrink: 0;
             color: #fff;
         }
-
         .chat-messages .msg .msg-content {
             flex: 1;
         }
-
         .chat-messages .msg .user {
             color: #f5e3b3;
             font-weight: 600;
             font-size: 14px;
         }
-
         .chat-messages .msg .text {
             color: #e2dccd;
             font-size: 15px;
             word-wrap: break-word;
         }
-
         .chat-messages .msg .time {
             color: #6a7860;
             font-size: 11px;
             flex-shrink: 0;
         }
-
         .chat-input-row {
             display: flex;
             gap: 10px;
         }
-
         .chat-input-row input {
             flex: 1;
             padding: 10px 16px;
@@ -688,11 +555,9 @@
             font-size: 15px;
             outline: none;
         }
-
         .chat-input-row input:focus {
             border-color: #b8a77d;
         }
-
         .chat-input-row button {
             padding: 10px 24px;
             border-radius: 30px;
@@ -704,12 +569,10 @@
             cursor: pointer;
             transition: 0.2s;
         }
-
         .chat-input-row button:hover {
             background: #e6dbb9;
             transform: scale(1.02);
         }
-
         .chat-clear {
             display: inline-block;
             margin-top: 8px;
@@ -718,11 +581,9 @@
             cursor: pointer;
             text-decoration: underline;
         }
-
         .chat-clear:hover {
             color: #e07c7c;
         }
-
         .chat-online {
             font-size: 13px;
             color: #8f9a84;
@@ -771,7 +632,7 @@
                     Скачать последнюю версию игры <strong>«Самодельная Африка»</strong> вы можете по ссылке.
                 </div>
                 <div class="download-block">
-                    <a href="https://github.com/tihonsolodun12-del/afrika-game/releases/download/v1.0/CA.zip" class="download-link" id="downloadBtn">Скачать игру</a>
+                    <a href="https://github.com/tihonsolodun12-del/afrika-game/releases/download/v1.0/CA.zip" class="download-link">Скачать игру</a>
                     <div class="version-text">актуальная версия 0.6.8</div>
                 </div>
 
@@ -802,13 +663,13 @@
                 </div>
             </div>
 
-            <!-- ===== ОБЩЕСТВЕННЫЙ ЧАТ (FIREBASE) ===== -->
+            <!-- ===== ОБЩЕСТВЕННЫЙ ЧАТ ===== -->
             <div class="chat-section">
                 <h3>💬 Общественный чат</h3>
                 <div class="chat-online">🟢 <span id="onlineCount">0</span> человек онлайн</div>
 
                 <div class="chat-messages" id="chatMessages">
-                    <!-- Сообщения будут загружаться из Firebase -->
+                    <!-- Сообщения загружаются из Firebase -->
                 </div>
 
                 <div class="chat-input-row">
@@ -855,10 +716,11 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- СКРИПТЫ: Firebase + логика пароля + модалка + руководство    -->
+    <!-- СКРИПТЫ -->
     <!-- ============================================================ -->
     <script>
         (function() {
+
             // ========== 1. ПАРОЛЬ ==========
             const PASSWORD = 'grisha';
             const passwordWrapper = document.getElementById('passwordWrapper');
@@ -873,7 +735,7 @@
                     siteContent.classList.add('active');
                     errorMsg.style.display = 'none';
                     passwordInput.value = '';
-                    initChat(); // инициализируем чат после входа
+                    initChat();
                 } else {
                     errorMsg.style.display = 'block';
                     passwordInput.value = '';
@@ -883,7 +745,7 @@
             enterBtn.addEventListener('click', checkPassword);
             passwordInput.addEventListener('keydown', e => { if (e.key === 'Enter') checkPassword(); });
 
-            // ========== 2. НАВИГАЦИЯ (руководство) ==========
+            // ========== 2. НАВИГАЦИЯ ==========
             const guideLink = document.getElementById('guideLink');
             const guidePage = document.getElementById('guidePage');
             const backToSite = document.getElementById('backToSite');
@@ -929,8 +791,8 @@
             document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.style.display === 'block') modal
                     .style.display = 'none'; });
 
-            // ========== 4. FIREBASE ЧАТ (общественный) ==========
-            // Конфигурация Firebase (Realtime Database)
+            // ========== 4. FIREBASE ЧАТ ==========
+            // ЗАМЕНИТЕ ЭТУ КОНФИГУРАЦИЮ НА ВАШУ!
             const firebaseConfig = {
                 apiKey: "AIzaSyC2ZRgWpC4E3ZfTgX5Yq7VvR8wN9xMpLqA",
                 authDomain: "samodelnaya-afrika-chat.firebaseapp.com",
@@ -941,21 +803,23 @@
                 appId: "1:123456789012:web:abcdef1234567890"
             };
 
-            let app, database;
+            let database = null;
             let chatInitialized = false;
 
             function initChat() {
                 if (chatInitialized) return;
+
                 try {
-                    app = firebase.initializeApp(firebaseConfig);
+                    // Проверяем, не инициализирован ли уже Firebase
+                    if (!firebase.apps.length) {
+                        firebase.initializeApp(firebaseConfig);
+                    }
                     database = firebase.database();
                     chatInitialized = true;
                 } catch (e) {
-                    console.warn('Firebase already initialized or error:', e);
-                    if (!database) {
-                        // если уже инициализировано, берём существующий экземпляр
-                        try { database = firebase.database(); } catch (ex) { return; }
-                    }
+                    console.error('Ошибка инициализации Firebase:', e);
+                    alert('Не удалось подключиться к чату. Проверьте конфигурацию Firebase.');
+                    return;
                 }
 
                 const chatMessages = document.getElementById('chatMessages');
@@ -964,7 +828,7 @@
                 const chatClear = document.getElementById('chatClear');
                 const onlineCount = document.getElementById('onlineCount');
 
-                // --- Цвета аватарок ---
+                // Цвета аватарок
                 const avatarColors = ['#4a6fa5', '#6b4a7a', '#3d8c6f', '#b8860b', '#c0392b', '#2980b9', '#8e44ad', '#d35400',
                     '#27ae60', '#2c3e50', '#7f8c8d', '#e67e22'
                 ];
@@ -980,13 +844,13 @@
                 function getCurrentTime() {
                     const now = new Date();
                     return now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2,
-                    '0');
+                        '0');
                 }
 
-                // --- Загрузка сообщений из Firebase (в реальном времени) ---
+                // ===== ЗАГРУЗКА СООБЩЕНИЙ =====
                 const messagesRef = database.ref('chat/messages');
 
-                // Очищаем контейнер перед загрузкой (чтобы не дублировать)
+                // Очищаем контейнер
                 chatMessages.innerHTML = '';
 
                 // Слушаем новые сообщения
@@ -994,7 +858,7 @@
                     const data = snapshot.val();
                     if (!data) return;
 
-                    // Проверяем, нет ли уже такого сообщения (по ключу)
+                    // Проверяем дубликаты
                     const existing = chatMessages.querySelector(`[data-key="${snapshot.key}"]`);
                     if (existing) return;
 
@@ -1018,7 +882,7 @@
                     chatMessages.scrollTop = chatMessages.scrollHeight;
                 });
 
-                // --- Отправка сообщения ---
+                // ===== ОТПРАВКА СООБЩЕНИЙ =====
                 function sendMessage() {
                     const text = chatInput.value.trim();
                     if (!text) return;
@@ -1037,42 +901,42 @@
                         timestamp: firebase.database.ServerValue.TIMESTAMP
                     };
 
-                    messagesRef.push(msgData).then(() => {
-                        chatInput.value = '';
-                    }).catch(err => {
-                        console.warn('Ошибка отправки:', err);
-                        alert('Не удалось отправить сообщение. Проверьте подключение.');
-                    });
+                    messagesRef.push(msgData)
+                        .then(() => { chatInput.value = ''; })
+                        .catch(err => {
+                            console.error('Ошибка отправки:', err);
+                            alert('Не удалось отправить сообщение. Проверьте подключение к интернету.');
+                        });
                 }
 
                 chatSendBtn.addEventListener('click', sendMessage);
                 chatInput.addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
 
-                // --- Очистка чата (только для админа) ---
+                // ===== ОЧИСТКА ЧАТА (админ) =====
                 chatClear.addEventListener('click', function() {
                     const pwd = prompt('Введите административный пароль для очистки чата:');
                     if (pwd === 'admin123') {
                         if (confirm('Очистить все сообщения в чате?')) {
-                            messagesRef.remove().then(() => {
-                                chatMessages.innerHTML = '';
-                                // Добавим служебное сообщение
-                                messagesRef.push({
-                                    user: 'Гриша',
-                                    text: 'Чат был очищен администратором.',
-                                    time: getCurrentTime(),
-                                    timestamp: firebase.database.ServerValue.TIMESTAMP
-                                });
-                            }).catch(err => alert('Ошибка очистки: ' + err.message));
+                            messagesRef.remove()
+                                .then(() => {
+                                    chatMessages.innerHTML = '';
+                                    // Добавляем служебное сообщение
+                                    messagesRef.push({
+                                        user: 'Гриша',
+                                        text: 'Чат был очищен администратором.',
+                                        time: getCurrentTime(),
+                                        timestamp: firebase.database.ServerValue.TIMESTAMP
+                                    });
+                                })
+                                .catch(err => alert('Ошибка очистки: ' + err.message));
                         }
                     } else if (pwd !== null) {
                         alert('Неверный пароль администратора.');
                     }
                 });
 
-                // --- Онлайн (примерное кол-во) ---
-                // В Realtime Database нет встроенного подсчёта, сделаем простой счётчик по уникальным пользователям за последние 5 минут
+                // ===== ОНЛАЙН =====
                 const userRef = database.ref('chat/users');
-                let userKey = null;
 
                 function updateOnlineStatus() {
                     const uid = localStorage.getItem('chatUserId_afrika') || 'user_' + Math.random().toString(36)
@@ -1083,16 +947,15 @@
                         online: true,
                         lastSeen: firebase.database.ServerValue.TIMESTAMP
                     });
-                    // При закрытии страницы
+
                     window.addEventListener('beforeunload', function() {
                         statusRef.update({ online: false });
                     });
-                    // Каждые 10 секунд обновляем
+
                     setInterval(() => {
                         statusRef.update({ lastSeen: firebase.database.ServerValue.TIMESTAMP });
                     }, 10000);
 
-                    // Подсчёт онлайна
                     userRef.on('value', function(snapshot) {
                         let count = 0;
                         const now = Date.now();
@@ -1106,15 +969,14 @@
                     });
                 }
                 updateOnlineStatus();
+
+                console.log('✅ Чат успешно подключён к Firebase!');
             }
 
-            // Если пароль уже был введён (например, при обновлении), инициализируем чат
+            // Если пользователь уже залогинен (например, обновил страницу)
             if (passwordWrapper.classList.contains('hidden') && siteContent.classList.contains('active')) {
                 initChat();
             }
-
-            // Дополнительно: если пароль вводится через enter, после входа уже вызывается initChat()
-            // Но если пользователь уже залогинен, то initChat вызовется при загрузке.
 
         })();
     </script>

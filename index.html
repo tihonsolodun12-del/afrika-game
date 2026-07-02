@@ -12,14 +12,13 @@
     </script>
 
     <style>
-        /* ===== ВСЕ СТИЛИ (полная версия) ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         body {
-            font-family: 'Times New Roman', 'Arial', serif;
+            font-family: 'Times New Roman', serif;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -489,12 +488,23 @@
             font-size: 22px;
             color: #f5edd7;
             margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .chat-status {
+            font-size: 14px;
+            color: #7dcd85;
+            font-weight: normal;
+        }
+        .chat-status.offline {
+            color: #e07c7c;
         }
         .chat-messages {
             background: rgba(0, 0, 0, 0.2);
             border-radius: 12px;
             padding: 12px 16px;
-            height: 250px;
+            height: 300px;
             overflow-y: auto;
             margin-bottom: 12px;
             border: 1px solid #3a4733;
@@ -503,43 +513,46 @@
         }
         .chat-messages .msg {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 10px;
-            margin-bottom: 8px;
-            padding: 6px 10px;
+            margin-bottom: 10px;
+            padding: 8px 12px;
             border-radius: 10px;
             background: rgba(255, 255, 255, 0.05);
             border-bottom: 1px solid #2d382a;
         }
         .chat-messages .msg .avatar {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             flex-shrink: 0;
             color: #fff;
         }
         .chat-messages .msg .msg-content {
             flex: 1;
+            min-width: 0;
         }
         .chat-messages .msg .user {
             color: #f5e3b3;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
         }
         .chat-messages .msg .text {
             color: #e2dccd;
             font-size: 15px;
             word-wrap: break-word;
+            margin-top: 2px;
         }
         .chat-messages .msg .time {
             color: #6a7860;
             font-size: 11px;
             flex-shrink: 0;
+            margin-top: 2px;
         }
         .chat-input-row {
             display: flex;
@@ -558,6 +571,10 @@
         .chat-input-row input:focus {
             border-color: #b8a77d;
         }
+        .chat-input-row input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
         .chat-input-row button {
             padding: 10px 24px;
             border-radius: 30px;
@@ -569,9 +586,13 @@
             cursor: pointer;
             transition: 0.2s;
         }
-        .chat-input-row button:hover {
+        .chat-input-row button:hover:not(:disabled) {
             background: #e6dbb9;
             transform: scale(1.02);
+        }
+        .chat-input-row button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
         .chat-clear {
             display: inline-block;
@@ -591,6 +612,13 @@
         }
         .chat-online span {
             color: #7dcd85;
+        }
+
+        .chat-empty {
+            color: #6a7860;
+            text-align: center;
+            padding: 40px 0;
+            font-style: italic;
         }
     </style>
 </head>
@@ -665,16 +693,19 @@
 
             <!-- ===== ОБЩЕСТВЕННЫЙ ЧАТ ===== -->
             <div class="chat-section">
-                <h3>💬 Общественный чат</h3>
+                <h3>
+                    💬 Общественный чат
+                    <span id="chatStatus" class="chat-status">⏳ подключение...</span>
+                </h3>
                 <div class="chat-online">🟢 <span id="onlineCount">0</span> человек онлайн</div>
 
                 <div class="chat-messages" id="chatMessages">
-                    <!-- Сообщения загружаются из Firebase -->
+                    <div class="chat-empty">⏳ Загрузка сообщений...</div>
                 </div>
 
                 <div class="chat-input-row">
-                    <input type="text" id="chatInput" placeholder="Напишите сообщение..." />
-                    <button id="chatSendBtn">Отправить</button>
+                    <input type="text" id="chatInput" placeholder="Напишите сообщение..." disabled />
+                    <button id="chatSendBtn" disabled>Отправить</button>
                 </div>
 
                 <div style="display:flex; gap:12px; margin-top:6px; flex-wrap:wrap;">
@@ -791,7 +822,7 @@
             document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.style.display === 'block') modal
                     .style.display = 'none'; });
 
-            // ========== 4. FIREBASE ЧАТ (ВАША БАЗА ДАННЫХ) ==========
+            // ========== 4. FIREBASE ЧАТ ==========
             const firebaseConfig = {
                 apiKey: "AIzaSyC2ZRgWpC4E3ZfTgX5Yq7VvR8wN9xMpLqA",
                 authDomain: "samodelnaya-afrika-chat.firebaseapp.com",
@@ -808,26 +839,46 @@
             function initChat() {
                 if (chatInitialized) return;
 
+                const chatMessages = document.getElementById('chatMessages');
+                const chatInput = document.getElementById('chatInput');
+                const chatSendBtn = document.getElementById('chatSendBtn');
+                const chatClear = document.getElementById('chatClear');
+                const onlineCount = document.getElementById('onlineCount');
+                const chatStatus = document.getElementById('chatStatus');
+
                 try {
                     if (!firebase.apps.length) {
                         firebase.initializeApp(firebaseConfig);
                     }
                     database = firebase.database();
                     chatInitialized = true;
-                    console.log('✅ Firebase подключён! URL:', firebaseConfig.databaseURL);
+
+                    // Проверяем подключение
+                    const testRef = database.ref('.info/connected');
+                    testRef.on('value', function(snap) {
+                        if (snap.val() === true) {
+                            chatStatus.textContent = '🟢 онлайн';
+                            chatStatus.className = 'chat-status';
+                            chatInput.disabled = false;
+                            chatSendBtn.disabled = false;
+                        } else {
+                            chatStatus.textContent = '🔴 офлайн';
+                            chatStatus.className = 'chat-status offline';
+                            chatInput.disabled = true;
+                            chatSendBtn.disabled = true;
+                        }
+                    });
+
+                    console.log('✅ Firebase подключён!');
                 } catch (e) {
                     console.error('❌ Ошибка Firebase:', e);
-                    alert('Не удалось подключиться к чату. Проверьте интернет.');
+                    chatStatus.textContent = '❌ ошибка';
+                    chatStatus.className = 'chat-status offline';
+                    chatMessages.innerHTML = '<div class="chat-empty">❌ Не удалось подключиться к чату</div>';
                     return;
                 }
 
-                const chatMessages = document.getElementById('chatMessages');
-                const chatInput = document.getElementById('chatInput');
-                const chatSendBtn = document.getElementById('chatSendBtn');
-                const chatClear = document.getElementById('chatClear');
-                const onlineCount = document.getElementById('onlineCount');
-
-                // Цвета аватарок
+                // ===== ЦВЕТА АВАТАРОК =====
                 const avatarColors = ['#4a6fa5', '#6b4a7a', '#3d8c6f', '#b8860b', '#c0392b', '#2980b9', '#8e44ad', '#d35400',
                     '#27ae60', '#2c3e50', '#7f8c8d', '#e67e22'
                 ];
@@ -849,12 +900,22 @@
                 // ===== ЗАГРУЗКА СООБЩЕНИЙ =====
                 const messagesRef = database.ref('chat/messages');
 
-                chatMessages.innerHTML = '';
+                // Очищаем и показываем загрузку
+                chatMessages.innerHTML = '<div class="chat-empty">⏳ Загрузка сообщений...</div>';
+
+                let firstLoad = true;
 
                 messagesRef.orderByChild('timestamp').limitToLast(100).on('child_added', function(snapshot) {
                     const data = snapshot.val();
                     if (!data) return;
 
+                    // Удаляем "загрузка"
+                    if (firstLoad) {
+                        chatMessages.innerHTML = '';
+                        firstLoad = false;
+                    }
+
+                    // Проверяем дубликаты
                     const existing = chatMessages.querySelector(`[data-key="${snapshot.key}"]`);
                     if (existing) return;
 
@@ -878,7 +939,15 @@
                     chatMessages.scrollTop = chatMessages.scrollHeight;
                 });
 
-                // ===== ОТПРАВКА =====
+                // Если нет сообщений, показываем "пусто"
+                setTimeout(() => {
+                    if (firstLoad) {
+                        chatMessages.innerHTML = '<div class="chat-empty">💬 Напишите первое сообщение!</div>';
+                        firstLoad = false;
+                    }
+                }, 2000);
+
+                // ===== ОТПРАВКА СООБЩЕНИЙ =====
                 function sendMessage() {
                     const text = chatInput.value.trim();
                     if (!text) return;
@@ -886,8 +955,11 @@
                     let userName = localStorage.getItem('chatUserName_afrika');
                     if (!userName) {
                         userName = prompt('Введите ваше имя:', 'Гость');
-                        if (userName) localStorage.setItem('chatUserName_afrika', userName);
-                        else userName = 'Гость';
+                        if (userName && userName.trim()) {
+                            localStorage.setItem('chatUserName_afrika', userName.trim());
+                        } else {
+                            userName = 'Гость';
+                        }
                     }
 
                     const msgData = {
@@ -898,35 +970,45 @@
                     };
 
                     messagesRef.push(msgData)
-                        .then(() => { chatInput.value = ''; })
+                        .then(() => {
+                            chatInput.value = '';
+                            chatInput.focus();
+                        })
                         .catch(err => {
-                            console.error('Ошибка отправки:', err);
-                            alert('Не удалось отправить сообщение.');
+                            console.error('❌ Ошибка отправки:', err);
+                            alert('Не удалось отправить сообщение. Проверьте интернет.');
                         });
                 }
 
                 chatSendBtn.addEventListener('click', sendMessage);
-                chatInput.addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
+                chatInput.addEventListener('keydown', e => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        sendMessage();
+                    }
+                });
 
-                // ===== ОЧИСТКА (админ) =====
+                // ===== ОЧИСТКА ЧАТА (админ) =====
                 chatClear.addEventListener('click', function() {
-                    const pwd = prompt('Введите административный пароль:');
+                    const pwd = prompt('Введите административный пароль для очистки чата:');
                     if (pwd === 'admin123') {
-                        if (confirm('Очистить все сообщения?')) {
+                        if (confirm('Очистить все сообщения в чате?')) {
                             messagesRef.remove()
                                 .then(() => {
-                                    chatMessages.innerHTML = '';
+                                    chatMessages.innerHTML =
+                                    '<div class="chat-empty">💬 Чат очищен администратором</div>';
+                                    // Добавляем служебное сообщение
                                     messagesRef.push({
                                         user: 'Гриша',
-                                        text: 'Чат очищен администратором.',
+                                        text: 'Чат был очищен администратором.',
                                         time: getCurrentTime(),
                                         timestamp: firebase.database.ServerValue.TIMESTAMP
                                     });
                                 })
-                                .catch(err => alert('Ошибка: ' + err.message));
+                                .catch(err => alert('Ошибка очистки: ' + err.message));
                         }
                     } else if (pwd !== null) {
-                        alert('Неверный пароль.');
+                        alert('Неверный пароль администратора.');
                     }
                 });
 
